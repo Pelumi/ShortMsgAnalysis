@@ -1,11 +1,11 @@
 __author__ = 'Pelumi'
 from os import listdir
 from os.path import isfile, join
-from sentanal.preprocessing.const import const
+from util import const
 from datetime import datetime
 import nltk
 from nltk.tree import *
-from sentanal.preprocessing.christ_tokenizer import Tokenizer
+from util.christ_tokenizer import Tokenizer
 from nltk.draw import tree
 
 from nltk.corpus import stopwords

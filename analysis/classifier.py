@@ -1,3 +1,5 @@
+__author__ = 'Pelumi'
+
 import os
 import sys
 
@@ -7,8 +9,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.learning_curve import learning_curve
 from vectorizers import SemanticVectorizer as vectorizers
 
-
-__author__ = 'Pelumi'
 import csv
 from textblob import TextBlob
 import pandas
@@ -27,8 +27,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix
 import unicodedata
 
-training_df = "dataframe.pkl"
-test_df = "test_dataframe.pkl"
+training_df = "../data/dataframes/dataframe.pkl"
+test_df = "../data/dataframes/test_dataframe.pkl"
 CHART_DIR = os.path.join("..", "charts")
 
 
@@ -106,7 +106,7 @@ def classifier(vectors, labels):
 
 
 def persist_norm_terms(norm_term):
-    with open("normalised_terms.txt", "a") as normFile:
+    with open("../data/normalised_terms.txt", "a") as normFile:
         normFile.write(norm_term)
 
 
@@ -161,6 +161,7 @@ def confusion_matrix(labels, predictions):
     plt.xlabel('predicted label')
 
     print classification_report(labels, predictions)
+
 def normalise_tweets(tweet):
     return_tweet = tweet
     # print "norm method called"

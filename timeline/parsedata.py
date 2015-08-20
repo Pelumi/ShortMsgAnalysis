@@ -6,8 +6,8 @@ import pprint
 from solrsearch import searchManager
 from datetime import datetime
 import pytz
-from sentanal.preprocessing.utils import ManageLexicon
-from sentanal.preprocessing.const import const
+from util.utils import ManageLexicon
+from util import const
 
 
 NUSSMSDataset = "/Users/Pelumi/Google Drive/BrisMscProject/DataSets/smsCorpus_en_2012.04.30_all.xml"
