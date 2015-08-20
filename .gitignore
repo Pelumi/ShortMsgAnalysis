@@ -1,0 +1,7 @@
+data
+charts
+*.pyc
+*.zip
+.DS_Store
+*.idea
+*__init__.py
