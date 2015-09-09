@@ -179,8 +179,10 @@ class SemanticVectorizer(BaseEstimator):
             currentPOSTags = SemanticVectorizer.TestPOSTagCountData[sms]
         else:
             currentPOSTags = getPosTag(sms)
-            print 'not found anywhere, sms is: ', sms
+            print 'Message not found anywhere, will be persisted: ', sms
             SemanticVectorizer.POSTagCountData[sms] = currentPOSTags
+            #persist new data
+            self.lexicon.savedata(SemanticVectorizer.POSTagCountData, constants.const.PersistedPOSTag)
 
         return [ucaseCount, hashTagCount, mentionCount, negEmoCount, posEmoCount, lastTermIsEmo, lastTermIsPunc, puncSeqCount,
                 tokenCount, charSeqCount, negationCount, tokCountNRCEmo, tokCountMPQA, tokCountBingLiu, maxScoreNRCEmo, maxScoreMPQA,

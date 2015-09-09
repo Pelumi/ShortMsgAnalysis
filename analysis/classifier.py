@@ -27,8 +27,9 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix
 import unicodedata
 
-training_df = "../data/dataframes/dataframe.pkl"
-test_df = "../data/dataframes/test_dataframe.pkl"
+TRAINING_DF_PICKLED = "../data/dataframes/dataframe.pkl"
+TEST_DF_PICKLED = "../data/dataframes/test_dataframe.pkl"
+RAW_TRAINING_DATA = "../data/cleanedBFinal.txt"
 CHART_DIR = os.path.join("..", "charts")
 
 
@@ -39,11 +40,10 @@ snowballStemmer = SnowballStemmer("english")
 
 def load_norm_lexicon():
     norm_dict = {}
-
+    print 'Loading Normalization dictionary...'
     with open(normalization_lexicon, "r") as csvfile:
         reader = csv.reader(csvfile, delimiter='\t', quotechar='"')
         for line in reader:
-            # print line
             norm_dict[line[0]] = line[1]
     print 'Normalization dictionary loaded...'
     return norm_dict
@@ -67,20 +67,19 @@ def describe_data(messages, label_describe=False, length_describe=False):
         #print messages.length.describe()
 
     # print messages.head()
-    print messages[:10]
+    print messages[10:30]
     # print messages.hist(column='length', by='label', bins=50)
     #messages.length.plot(bins=20, kind='hist')
 
 def load_training_data(load=True):
     if load:
-        df = pandas.read_pickle(training_df)
+        df = pandas.read_pickle(TRAINING_DF_PICKLED)
         print 'Training data frame loaded from disk'
     else:
-        df = pandas.read_csv("../data/cleanedBFinal.txt", skipinitialspace=True, sep="\t", quoting=csv.QUOTE_NONE,
-                             names=["label", "tweet"])
+        df = pandas.read_csv(RAW_TRAINING_DATA, skipinitialspace=True, sep="\t", quoting=csv.QUOTE_NONE, names=["label", "tweet"])
         df = df.drop_duplicates()
         df.ix[df.label == 'neutral ', 'label'] = 'neutral'
-        df.save(training_df)
+        df.save(TRAINING_DF_PICKLED)
         print "Data frame created from csv and saved"
     return df
 
@@ -320,7 +319,7 @@ def read_file_as_list(filename):
 
 def load_test_set(load=True):
     if load:
-        test_dataframe = pandas.read_pickle(test_df)
+        test_dataframe = pandas.read_pickle(TEST_DF_PICKLED)
         print 'Test data frame loaded from disk'
     else:
         positive_test_instances = read_file_as_list(positive_test_set)
@@ -348,7 +347,7 @@ def load_test_set(load=True):
         #append negative and neutral to positive df
         test_dataframe = test_dataframe.append(test_dataframe_neg)
         test_dataframe = test_dataframe.append(test_dataframe_neut)
-        test_dataframe.to_pickle(test_df)
+        test_dataframe.to_pickle(TEST_DF_PICKLED)
 
     return test_dataframe
 
@@ -366,13 +365,9 @@ test_data[INSTANCES] = test_data[INSTANCES].apply(remove_accents)
 #describe_data(test_data, label_describe=True, length_describe=True)
 
 clf = MultinomialNB(alpha=0.01)
-max_ent = LogisticRegression(fit_intercept=False, class_weight='auto', penalty='l1', tol=0.6e-3, C=1.5, )
-#max_ent = LogisticRegression(class_weight='auto', penalty='l1', tol=0.6e-3, C=1.458, )
-                          #   C=1.458, )  # auto was great, penalty l1 limped to 69 e-3 was better with 0.6, c=1.46 was awesome
-#max_ent = LogisticRegression()
-#plot_decision_boundary(max_ent, training_data[INSTANCES][:100], training_data[LABEL_NAME][:100])
-#sys.exit()
+max_ent = LogisticRegression(fit_intercept=False, class_weight='auto', penalty='l1', tol=0.6e-3, C=1.5, )  # auto was great, penalty l1 limped to 69 e-3 was better with 0.6, c=1.46 was awesome
 svmClassifier = svm.SVC(kernel='linear', C=1000, gamma=0.001)
+
 pipeline = configure_pipeline(max_ent)
 
 # #testing the classifier with SMS dataset
